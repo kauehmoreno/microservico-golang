@@ -1,30 +1,32 @@
-package main
+package router
 
 import (
 	"github.com/dimfeld/httptreemux"
 	"github.com/kauehmoreno/microservico-golang/api"
+	"github.com/kauehmoreno/microservico-golang/db"
 	"gopkg.in/mgo.v2"
+	"log"
 	"net/http"
 )
 
-func routers() {
+func Routers() http.Handler {
 
-	session, err := mgo.Dial("localhost:27017/Soccer2017")
+	session, err := mgo.Dial("localhost:27017/MateriaGolang")
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	repository := db.NewSoccerRepository(session)
+	repository := db.NewMateriaRepository(session)
 
-	router := httptreemux.NewContextMux()
-	router.Handler(http.MethodGet, "/", &api.MainHandler)
-	router.Handler(http.MethodGet, "/materia/:id", &api.MateriaHandler{})
-	router.Handler(http.MethodGet, "/materias/:order_by/:limit", &api.MateriasHandler{})
+	routerDefinition := httptreemux.NewContextMux()
+	routerDefinition.Handler(http.MethodGet, "/", &api.MainHandler{})
+	routerDefinition.Handler(http.MethodGet, "/materia/:id", &api.MateriaHandler{Repository: repository})
+	routerDefinition.Handler(http.MethodGet, "/materias/:order_by/:limit", &api.MateriasHandler{Repository: repository})
 
 	// posts
-	router.Handler(http.MethodPost, "/api/v1/:operation/", &api.PostMateriaHandler{Repository: repository})
-	router.Handler(http.MethodPost, "/api/v1/file_upload/", &api.FileUploadHandler{Repository: repository})
+	routerDefinition.Handler(http.MethodPost, "/api/v1/:operation/", &api.PostMateriaHandler{Repository: repository})
+	//routerDefinition.Handler(http.MethodPost, "/api/v1/file_upload/", &api.FileUploadHandler{Repository: repository})
 
-	return router
+	return routerDefinition
 }
