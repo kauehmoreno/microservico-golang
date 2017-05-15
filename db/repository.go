@@ -56,7 +56,7 @@ func (r *MateriaRepository) Delete(id string) error {
 	return mongoCollection.Remove(bson.M{"_id": id})
 }
 
-func (r *MateriaRepository) GetAll() ([]*entities.Materia, error) {
+func (r *MateriaRepository) GetAll(c1 chan []*entities.Materia) ([]*entities.Materia, error) {
 	session := r.session.Clone()
 	defer session.Close()
 
@@ -67,6 +67,8 @@ func (r *MateriaRepository) GetAll() ([]*entities.Materia, error) {
 	docs := make([]*entities.Materia, 0)
 
 	err := mongoCollection.Find(query).All(&docs)
+
+	c1 <- docs
 	return docs, err
 }
 
