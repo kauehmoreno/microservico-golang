@@ -41,16 +41,17 @@ type MateriasHandler struct {
 }
 
 func (materias *MateriasHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	articles, err := materias.Repository.GetAll()
+	ch1 := make(chan []*entities.Materia)
 
-	if err != nil {
-		log.Println("Failed to fetch materia:, ", err)
-		fmt.Println("Ocorreu um problema")
-	}
-	encode := json.NewEncoder(w)
-	erro := encode.Encode(articles)
-	if erro != nil {
-		http.Error(w, erro.Error(), http.StatusInternalServerError)
+	go materias.Repository.GetAll(ch1)
+
+	select {
+	case data := <-ch1:
+		encode := json.NewEncoder(w)
+		erro := encode.Encode(data)
+		if erro != nil {
+			http.Error(w, erro.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
