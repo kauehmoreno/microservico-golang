@@ -44,7 +44,7 @@ func (materias *MateriasHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 	articles, err := materias.Repository.GetAll()
 
 	if err != nil {
-		log.Println("Failed to fetch people:, ", err)
+		log.Println("Failed to fetch materia:, ", err)
 		fmt.Println("Ocorreu um problema")
 	}
 	encode := json.NewEncoder(w)
