@@ -45,7 +45,7 @@ func (r *MateriaRepository) Update(materia *entities.Materia) error {
 	defer session.Close()
 
 	mongoCollection := session.DB("").C(MateriaCollection)
-	return mongoCollection.Update(bson.M{"_id": materia.id}, materia)
+	return mongoCollection.Update(bson.M{"_id": materia.Id}, materia)
 }
 
 func (r *MateriaRepository) Delete(id string) error {
