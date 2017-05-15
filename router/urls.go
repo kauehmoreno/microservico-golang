@@ -22,7 +22,7 @@ func Routers() http.Handler {
 	routerDefinition := httptreemux.NewContextMux()
 	routerDefinition.Handler(http.MethodGet, "/", &api.MainHandler{})
 	routerDefinition.Handler(http.MethodGet, "/materia/:id", &api.MateriaHandler{Repository: repository})
-	routerDefinition.Handler(http.MethodGet, "/materias/:order_by/:limit", &api.MateriasHandler{Repository: repository})
+	routerDefinition.Handler(http.MethodGet, "/materias/:limit", &api.MateriasHandler{Repository: repository})
 
 	// posts
 	routerDefinition.Handler(http.MethodPost, "/api/v1/:operation/", &api.PostMateriaHandler{Repository: repository})
