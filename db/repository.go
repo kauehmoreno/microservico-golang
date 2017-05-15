@@ -62,7 +62,7 @@ func (r *MateriaRepository) GetAll() ([]*entities.Materia, error) {
 
 	mongoCollection := session.DB("").C(MateriaCollection)
 
-	query := bson.M{"inative": false}
+	query := bson.M{}
 
 	docs := make([]*entities.Materia, 0)
 
